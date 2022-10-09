@@ -1,5 +1,7 @@
-03102022.1 - NOTA 1 - Código feito nas férias totalmente recuperado e aprimorado, porém necessário mais
+03102022.1 GH - NOTA 1 - Código feito nas férias totalmente recuperado e aprimorado, porém necessário mais
 polimento
+
+09102022.1 GH - NOTA 2 - Movimentação do obj_Cursor melhorado
 
 
 
