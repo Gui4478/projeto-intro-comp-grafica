@@ -4,18 +4,35 @@ var baixo = keyboard_check(ord("S"));
 var esquerda = keyboard_check(ord("A"));
 var direita = keyboard_check(ord("D"));
 
-//NOTA: seria interessante um sistema em que quanto mais tempo precionado, mais rápido o cursor fica (fácil)
 //NOTA: seria interessante uma resistencia em sair da área selecionada de movimentação em vez de só desselecionar
+//NOTA: ideia para código para criar a trinha do player
+//se "isAliado_Movendo", cria uma lista de movimento e armazena os movimentos nela
+	//se a quantidade de passos for maior que o movimento da unidade, reseta a lista e cria uma automaticamente
 
 if(!switch1)
 {	
-	switch2 = true;
+	if(isAliado_Movendo) switch2 = true;
 	velh = (direita - esquerda) * veloc;
 	velv = (baixo - cima) * veloc;
+	
+	#region GERENCIA VELOCIDADE
+	if(velh_buffer != 0 || velv_buffer != 0) and (velh_buffer == sign(velh)) and (velv_buffer == sign(velv))
+	{
+		veloc = 6;
+		isContinuo = true;
+	}
+	else
+	{
+		veloc = 3;
+		isContinuo = false;
+		velh_buffer = 0;
+		velv_buffer = 0;
+	}
+	#endregion
 }
 else
 {	
-	buffer_move = 3;
+	buffer_tempo = 3;
 	
 	#region OLHA ESTADO DO PROX. TILE
 	if(switch2)
@@ -36,6 +53,7 @@ else
 	
 	#region HORIZONTAL
 	var _velh = sign(velh);
+	velh_buffer = _velh;
 	if (cord_x + _velh == -1) or (cord_x + _velh >= global.larg_tela) velh = 0;
 	var xx = cord_x * TAM_TILE;
 	repeat(abs(velh))
@@ -55,6 +73,7 @@ else
 	
 	#region VERTICAL
 	var _velv = sign(velv);
+	velv_buffer = _velv;
 	if (cord_y + _velv == -1) or (cord_y + _velv >= global.alt_tela) velv = 0;
 	var yy = cord_y * TAM_TILE;
 	repeat(abs(velv))
@@ -72,9 +91,10 @@ else
 	}
 	#endregion
 }
+
 if(velh == 0) and (velv == 0) switch1 = false;
-else if(buffer_move == 0) switch1 = true;
-else buffer_move--;
+else if(buffer_tempo == 0) or (isContinuo) switch1 = true;
+else buffer_tempo--;
 #endregion
 
 #region APARENCIA
@@ -130,8 +150,8 @@ if (keyboard_check_pressed(vk_enter)) and (!switch1)
 	
 	
 	#region ATACANDO COM ALIADO
-	//apenas se move pelos Tiles vermelhas
-	//se selecionar um Tile, a Unidade ataca
+	//apenas se move pelos Tiles vermelhs onde há inimigos
+	//se selecionar um Tile, faz a Unidade atacar o inimigo correspondente
 	#endregion
 }
 #endregion
